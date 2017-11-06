@@ -1,0 +1,89 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+/*
+Oods는 특정인 한명에게 선물을 제공하고자합니다. 것은 그들 모두가 현재에 투자 할 예산이 다릅니다. 
+물론, 그들의 독특한 소망은 각 짐 우드가 감당할 수있는 최대 예산을 결정하는 가장 공정한 방법을 찾는 것입니다. 
+Oods는 며칠 동안이 문제를 논의 해 왔으며 지금까지 완전히 만족할만한 해결책을 찾지 못했습니다.
+
+의사는 프로그램을 작성하여 도움의 손길을주기로 결정합니다. 그의 생각은 Oods가 현재를 사기에 충분한 돈을 가지고 있는지, 만약 그렇다면 Ood가 각각의 예산 한도에 따라 
+지불해야하는 금액을 계산하는 것입니다.
+Doctor는 각 Ood의 최대 예산 목록을 가지고 있습니다. 의사의 목표는 비용을 매우 정확하게 나누는 것입니다.
+Oods 민주주의 가치를 존중하고 최선의 해결책을 선택하기 위해 의사는 다음과 같이 결정합니다.
+Ood는 최대 예산 이상을 지불 할 수 없습니다.
+최적의 솔루션은 가장 큰 기여도가 최소 인 솔루션입니다.
+여러 가지 최적 해가있는 경우 가장 좋은 두 번째 기여가 최소 인 해가 가장 좋은 방법이며, 등등 ...
+또한 계산을 용이하게하기 위해 의사는 각 재정적 참여가 현지 통화의 정수가되기를 원합니다 (아무도 센트를주지 않아야 함).
+
+예를 들어, Oods는 100 달러의 선물을 사기를 원합니다. 첫 번째 Ood는 3의 예산을 가지며 두 번째 예산은 45의 예산을 가지며 세 번째 예산은 100의 예산을가집니다.
+이 경우 : 3원을 전부내고 45를 전부내고 나머지를 낸다
+두 번째 예 : 그들은 여전히 100 달러의 선물을 사고 싶지만 두 번째 Ood는 이번에 100 달러의 예산을 가지고 있습니다.
+이 경우 : 3원을 가지고 있음 3원을 내고 97의 절반을 2번째가 3번째가 나머지를 낸다
+*/
+
+/*모두가 돈을 모아 물건을 살때 투자 할예산이 다를경우 더치페이할 방법(?)을 찾기 
+우선 각자의 최대 예산을 갖고 있고 목적은 이 비용을 정확하게 나누는것
+다음과 같은 조건이 있음
+1. 최대 예산(요구)이상을 지불 할수 없음
+최적의 답은 가장 큰 지불값 이 최소인것
+최적의 해가 여러개면 두번째(?)가 가장 좋을(아마 최소)것
+또한 모든값은 정수로한다 즉 달러 단위임
+
+//ㄴ 더치페이 문제인듯 격차를 최대한 줄여라 이정도?
+*/
+class Solution
+{
+    static void Main(string[] args)
+    {
+        int N = int.Parse(Console.ReadLine());//더치페이할사람들
+        int C = int.Parse(Console.ReadLine());//물건값
+        List<int> money = new List<int>();
+        int pay = 0;
+        int dutch;
+        for (int i = 0; i < N; i++)
+        {
+            
+            money.Add(int.Parse(Console.ReadLine() ) );//사람들 예산 
+            pay += money[i];
+        }
+        if( pay< C)
+            Console.WriteLine("IMPOSSIBLE");
+        else
+        {
+            money.Sort();
+
+            for(int i =0; i < money.Count; i++)
+            {
+                dutch = C/N;
+                Console.Error.WriteLine("페이 : " +C);
+                if(dutch > money[i])
+                {
+                    C -= money[i];
+                    Console.WriteLine(money[i]);
+                }
+                else
+                {
+                    C -= dutch;
+                    Console.WriteLine(dutch);
+                }
+                N-=1;
+            }
+        }
+        
+
+        // Write an action using Console.WriteLine()
+        // To debug: Console.Error.WriteLine("Debug messages...");
+//구입이 가능하다면 오름차순으로 지불가격을 표기하고 불가능하면 Impossible을 함
+//어떻게살까? 일단 모든 count >= 지불가격인지보고
+//물건값/사람수를한 평균가격보다 작은수면 전부넣고
+//그 평균가격에서 지불한가격을 뺀값 을 또다시 지불 시키고<< 다시 (물건값-n)/(사람수-1)하고 위로 올라가고
+//물건값/n이면 전부 지불할거같음
+//최우선으로 정렬함
+
+    }
+}
