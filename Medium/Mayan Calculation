@@ -1,0 +1,157 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+새로운 마야 사이트를 발견하면 수백 개의 수학, 물리학 및 천문학 도서가 발견되었습니다.
+
+세계의 종말은 우리가 생각한 것보다 빨리 도착할 수 있습니다. 그러나 우리는 당신이 그것을 확신하지 못하게해야합니다!
+
+따라서 마야 과학 계산을 전산화하기 위해 두 마야 번호 사이에서 기본적인 산술 연산을 수행 할 수있는 프로그램을 개발해야합니다.
+
+마야 수치 체계는 0에서 19까지 20 개의 숫자로 이루어져 있습니다.
+
+마야 족의 숫자는 수직 부분으로 나뉘어져 있습니다. 각 섹션에는 20의 거듭 제곱을 나타내는 숫자 (0에서 19까지)가 포함됩니다.
+가장 낮은 섹션은 20^0에 해당하고, 위 섹션은 20^1에 해당합니다.
+
+따라서 아래의 예는 (12 x 20 x 20) + (0 x 20) + 5 = 4805
+
+문제를 일으키기 위해 마야는 여러 개의 방언을 사용했고 숫자의 그래픽 표현은 방언마다 다를 수 있습니다.
+
+마야 숫자의 표현은 ASCII 문자의 형태로 프로그램의 입력으로 주어집니다. 주어진 마야 번호 사이에 연산 결과를 표시해야합니다. 
+가능한 조작은 *, /, +, -
+**/
+//마야숫자 체계는 20진수로 4*4사이즈배열에 3가지 문자를 쓴 문자열로 표현이됨
+//맨아래는 문자열(20진수) *20^0이고 그위로 20^1>20^2이렇게 지수가 올라감
+// n/4하고 나온 값을 최대지수로 위에서 아래로 점차 내리는식으로?
+//문자열 형태로 받으면 그 번호사이의 계산결과를 표시해야한다
+//아스키아트 했던것과 비슷할꺼같음
+//10진수로 변환하고 거기서 계산을 한다음에 다시 20진수로 돌려야함
+class Solution
+{
+    static void Main(string[] args)
+    {
+        string[] inputs = Console.ReadLine().Split(' ');
+        int L = int.Parse(inputs[0]);//마야문장 넓이,높이
+        int H = int.Parse(inputs[1]);
+//        string[,] mayas = new string[H,L];
+        List<string> mayas = new List<string>(20);
+        
+
+        long num1  = 0;
+        long num2 = 0;
+        long result=0;
+        
+        int pow20 = 1;
+        int cur = 0;
+        for(int i = 0; i <20; i++) mayas.Add("");
+        for (int i = 0; i < H; i++)
+        {
+            string numeral = Console.ReadLine();//20개의 마야문장들
+//            mayas.Add( "" );
+            for(int j = 0; j < 20; j++)
+            {
+//                mayas [i,j] = numeral.Substring(count, L);
+                mayas[j] += numeral.Substring(j * L, L);
+            }
+
+            //높이 5줄로 나뉘어 있으니 이걸 나눠 갖을 필요가 있음
+        }
+           
+        int S1 = int.Parse(Console.ReadLine());
+        string[] m_Num1 = new string[S1];
+        pow20 = (int)Math.Pow(20 ,(S1/L -1) ) ;
+        
+        for (int i = 0; i < S1; i++)//첫번째 숫자
+        {
+            //여기서 %L == 0이 된다면 20 * 제곱 을 할것
+
+            m_Num1[cur]+= Console.ReadLine();
+//            Console.Error.WriteLine(m_Num1[cur]);            
+//            Console.Error.WriteLine( (i+1)%L);   
+            //i+1을해서 L의 크기일때마다 하도록 꾀함
+            if( (i+1) %L == 0 &&  i+1>=L)
+            {
+                //mayas를 부분적으로 해석할것
+                
+                  num1 += pow20 *  mayas.IndexOf(m_Num1[cur]);
+//                  Console.Error.WriteLine("답 : " +num1);
+                  cur++;
+
+                pow20 /= 20;
+            }                        
+        }
+        int S2 = int.Parse(Console.ReadLine());
+        string[] m_Num2 = new string[S2];
+        
+        pow20 = (int)Math.Pow(20 ,(S2/L -1) ) ;
+        cur = 0;
+        for (int i = 0; i < S2; i++)//두번째숫자
+        {
+            
+            m_Num2[cur] += Console.ReadLine();          
+  
+//            Console.Error.WriteLine(m_Num2[cur]);
+            if( (i +1) %L == 0 && i +1 >=L )
+            {
+                num2 += pow20 * mayas.IndexOf(m_Num2[cur]);
+                
+  //              Console.Error.WriteLine("답2 : " +num2);
+
+                cur++;
+                pow20 /= 20;
+            }
+        }
+        /*4805 % 20 = 5
+        4805 / 20 = 240
+        240 % 20 = 0
+        240/20 = 12
+        12 % 20 =12
+        그렇다면 % 20을 한값만 넣어준다 그뒤, 역순으로 호출함
+        */
+        //숫자 둘다 1번과 같은 형태
+        //S1,S2의 값을 찾고 결과값에다가 S1,S2를 제곱하는식으로 할듯
+        string operation = Console.ReadLine();//산술식
+
+        switch(operation[0])
+        {
+            case '+' : result = num1 + num2; break;
+            case '/' : result = num1 / num2; break;
+            case '*' : result = num1 * num2; break;
+            case '-' : result = num1 - num2; break;            
+        }
+        //가장큰게 long이라 long을 받을수 있도록함 << 값깨짐 방지
+        List<long> scroll = new List<long>();
+        while(result != 0)
+        {
+            //처음엔 5, 2번째엔 16이 나오는 구성
+            Console.Error.WriteLine(result %20 + "현값 ");            
+            Console.Error.WriteLine(result /20 + "나누값 ");  
+
+            if(result / 20 == 0)
+            Console.Error.WriteLine("==0");
+            scroll.Add( result %20);
+//0 17 2 4 17 3 12 7
+            result /= 20;
+        }
+
+        if(scroll.Count == 0)
+            for(int j = 0; j < H; j++)
+                Console.WriteLine(mayas[0].Substring(j*L,L) );
+        
+//그리기
+        for(int i = scroll.Count -1; i >= 0; i--)
+        {
+            Console.Error.WriteLine("write!" + scroll[0]);
+            for(int j = 0; j < H; j++)
+                Console.WriteLine(mayas[(int)scroll[i]].Substring(j*L,L) );
+        }
+
+        // Write an action using Console.WriteLine()
+        // To debug: Console.Error.WriteLine("Debug messages...");
+
+    }
+}
