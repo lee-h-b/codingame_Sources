@@ -1,0 +1,165 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+//핵심 알고리즘,방식 = 결정트리, 중심, 몬테카를로 알고리즘
+/**
+이 게임은 폭 16000 단위와 높이 9000 단위로 재생됩니다. 당신은 애쉬라는 남자를 통제하고, 주위의 특정 범위 내에서 좀비를 죽일 수있는 총을 사용합니다.
+
+애쉬는 다음과 같이 작동합니다.즘
+애쉬는 좌표 X Y를 출력하여 게임 영역 내의 어느 지점 으로든 이동하라는 메시지를받을 수 있습니다. 왼쪽 위의 점은 0 0입니다.
+매 턴마다 애쉬는 목표 좌표를 향해 정확히 1000 유닛 이동합니다. 단 1000 유닛 미만인 경우 대상 좌표로 이동합니다.
+턴이 끝날 때 좀비가 애쉬의 2000 유닛 내에 있다면, 그는 그 좀비를 쏴서 파괴합니다. 전투에 대한 자세한 내용은 아래로.
+
+다른 인간은 게임 영역에 있지만 움직이지 않을 것입니다. 좀비가 모든 것을 죽이면 현재 시험 경우에 점수 0 점을 얻습니다.
+
+좀비는 게임이 시작될 때 게임 영역 주변에 배치되며 점수를 획득하려면 파괴해야합니다.
+
+좀비는 다음과 같이 작동합니다.
+각 턴, 모든 좀비는 애쉬를 포함한 가장 가까운 인간을 목표로 삼을 것이고, 400 유닛을 향해 나아갈 것입니다. 좀비가 400 단위 미만이면 인간이 죽고 좀비는 자신의 좌표로 이동합니다.
+두 명의 좀비가 같은 좌표를 차지할 수 있습니다.
+
+두 라운드 사이에 액션이 발생하는 순서는 다음과 같습니다.
+좀비는 목표를 향해 이동합니다.
+재는 그의 표적쪽으로 움직입니다.
+애쉬 주변의 2000 유닛 범위 내의 좀비는 파괴됩니다.
+좀비는 좌표를 공유하는 인간을 먹습니다.
+
+좀비를 죽이면 점수가 올라갑니다. 좀비 당 얻는 포인트의 수에는 몇 가지 요인이 있습니다.
+
+채점은 다음과 같이 작동합니다.
+좀비는 애쉬를 제외하고 아직 살아있는 x10의 숫자를 가진 사람의 가치가 있습니다.
+같은 라운드에서 여러 좀비가 파괴되면 n 번째 좀비가 살해당한 가치에 피보나치 수열 (1, 2, 3, 5, 8 등)의 n + 2 번째 숫자가 곱해집니다. 따라서 같은 차례에 최대량의 좀비를 죽여야합니다.
+
+가로 16000 세로 9000의 공간에서 일정범위 내의 좀비를 죽이면서 살아남기
+동작원리는 다음과 같음
+1. x,y를 출력해서 범위내의 어디로든 이동할수 있음 왼쪽위는 0,0
+2. 매턴 마다 입력받은 범위로 1000이동함 1000 미만이면 그 미만좌표로 이동
+3. 이동후 좀비가 2000범위내에 존재하면 좀비를 쏴서 죽임
+좀비가 다죽이면 0점을 얻고 좀비를 잡아야 경험치를 얻음
+좀비는 다음과같음
+1.각턴 모든 좀비는 가까운 인간을 목표로 400막큼의 값으로 걸어감 거리가 400미만이면 사람은 죽고 좀비는 갈길감
+2.두명의 좀비가 같은 좌표에 존재가 가능
+
+라운드 사이클은 다음과같음
+1. 좀비이동 
+2.ash(휴먼)이 목표로 이동
+3.ash주변 2000내의 좀비 소멸
+4.좀비와 같은 좌표의 휴먼사망
+
+좀비를 잡아서 얻는 포인트 수엔 몇가지 조건?이 있음
+1. 좀비는 아직 생졵한 사람 *10의 가치가 있음
+2. 좀비가 동시에 죽으면 n번째 좀비가 피보나치 수열(1,2,3,5,8...) 의 n +2 숫자가 곱해짐 따라서 가능하면 동시에 죽여야함
+
+ **/
+ /* 규칙 1. 게임 좌표계는 정수를 사용함 즉 0,0에서 500,500으로 좀비가 이동하면 282.843, 282.843이어야하는데 여기서 정수만 하니 282 282
+ */
+ struct zombies
+ {
+     public int id;
+     public int x;
+     public int y;
+     public int nextX;
+     public int nextY;     
+ }
+ struct humans
+ {
+     public int id;
+     public int x;
+     public int y;     
+ }
+class Player
+{
+    static void Main(string[] args)
+    {
+        humans desth;
+        string[] inputs;
+
+        // game loop
+        while (true)//아마 가장 가까운 좀비를 잡는식으로 할듯 아니면 나보다 사람에게 가까우면 가서잡기 위치 우선순위로 아마 사람의 사이가 될듯함
+        {
+            //이동각도를 관여하진 않아봄
+            inputs = Console.ReadLine().Split(' ');
+            //ash(총쏘는 사람)좌표
+            int x = int.Parse(inputs[0]);
+            int y = int.Parse(inputs[1]);
+            //사람의 수
+            int humanCount = int.Parse(Console.ReadLine());
+            List<humans> h = new List<humans>();
+            for (int i = 0; i < humanCount; i++)
+            {
+                //각각 ID, 좌표
+                h.Add(new humans());        
+                inputs = Console.ReadLine().Split(' ');
+                var temp = h[i];
+                temp.id = int.Parse(inputs[0]);
+                temp.x = int.Parse(inputs[1]);
+                temp.y = int.Parse(inputs[2]);
+                h[i] = temp;
+                desth = temp;//어짜피 초기화 해야하니깐 이렇게함
+            }
+            //잡아야할 좀비의 수
+            int zombieCount = int.Parse(Console.ReadLine());
+            List<zombies> z = new List<zombies>();
+            
+            for (int i = 0; i < zombieCount; i++)
+            {
+                z.Add(new zombies());
+                //좀비 ID,좌표, 목표좌표
+                inputs = Console.ReadLine().Split(' ');
+                var temp = z[i];
+                temp.id = int.Parse(inputs[0]);
+                temp.x = int.Parse(inputs[1]);
+                temp.y = int.Parse(inputs[2]);
+                temp.nextX = int.Parse(inputs[3]);
+                temp.nextY = int.Parse(inputs[4]);
+                z[i] = temp;
+            }
+
+//실제 계산
+            //1. 내위치를 사람과 껴보기
+            //2. 좀비의 위치에 따라 달라져야하기에 사람과 좀비의 위치가 가장 가까운사람 먼저찾기?
+            //2-2. 아니면 나와 가장 가까운 좀비위치? 아니면 2와혼합??
+            //3. 수학적 응용을 하여 좀비와 위치가 가장 가까운사람을 먼저 찾고 그사람의 +-50으위치에서 대기하는거 어떨까
+            // Write an action using Console.WriteLine()
+            // To debug: Console.Error.WriteLine("Debug messages...");
+            int curz = 0;
+            int curh = 0;
+            int shortDist =int.MaxValue;//두점사이의 가장짧은거리
+            for(int i =0; i< h.Count; i++)
+            {
+                //휴먼 기준으로 좀비위치찾읅임
+                for(int j = 0; j<z.Count; j++)
+                {
+                                        Console.Error.WriteLine("좀비 아이디 " + z[j].id + "xy" +z[j].x +" " + z[j].y);
+                                        //죽으면 z.Count가 줄어야하는데 안줄은게 문제인듯 그럼 가장짧은 z.cur이라고 가정하고 지워보기로
+                                        //문제, 좀비가 일자로 온다면 a-b-a-b반복하는데 a-b-가는도중 b가죽고 그럼 두마리 토끼를 놓치는꼴
+                    //내가 가기전에 좀비에게 닿는지를 먼저 보고 움직이는게 좋겠음
+                    //일단 최소거리인 값은 냅두고말이지
+                    //소멸존은 2000, 이동거리는 1000 좀비는 400
+                    //사람과 좀비와의거리가 내가 갈때까지 살아있다면(아마 사람,좀비거리)/400) 가고 못구하면 포기하고 다음사람을 구하기시도 
+                    
+                    int temp =(int) Math.Sqrt(Math.Pow(h[i].x - z[j].x, 2) + Math.Pow(h[i].y - z[j].y, 2) );
+                    int humantoAshdist = (int) Math.Sqrt(Math.Pow(h[i].x - x,2) + Math.Pow(h[i].y - y,2) );
+
+                    if(shortDist > temp && (humantoAshdist/1000 ) <  (temp/400)) 
+                    {
+                        shortDist = temp;
+                        curz = j;
+                        curh = i;//curz는 쓸모없을듯
+                        Console.Error.WriteLine("나와 휴먼 거리 : " +humantoAshdist/1000 + " 좀비와 휴먼의 거리 " + temp/400);
+                    }
+
+                    Console.Error.WriteLine("i, j" +i +", " + j);
+                }
+                
+            }
+            Console.Error.WriteLine("거리 : " + shortDist + "curz,curh " +curz +" " +curh);
+            Console.Error.WriteLine("목표사람위치 : " + (h[curh].x - 240) + " " + h[curh].y);
+            //사람에 겹치기가 아니라 물론 겹치기 중요하겠지만은 목표지점을 사람과 나와 좀비의 중간지점이면 어떨까?
+            Console.WriteLine(h[curh].x+ " "+ h[curh].y); // Your destination coordinates
+        }
+    }
+}
