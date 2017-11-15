@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int N;
+    cin >> N; cin.ignore();
+    int answer = INT8_MAX;
+    vector<int> Li;//리스트대신 벡터
+    for (int i = 0; i < N; i++) {
+        int Pi;
+        cin >> Pi; cin.ignore();
+        Li.push_back(Pi);
+    }
+    sort(Li.begin(), Li.end());
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+    for(int i = 0; i < N - 1; i++)
+    {
+        if( answer > Li[i+1] - Li[i])
+        answer = Li[i+1] - Li[i];
+    }
+    cout << answer << endl;
+}

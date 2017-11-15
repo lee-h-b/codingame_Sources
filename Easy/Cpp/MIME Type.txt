@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int N; // Number of elements which make up the association table.
+    cin >> N; cin.ignore();
+    int Q; // Number Q of file names to be analyzed.
+    cin >> Q; cin.ignore();
+    map<string,string> extension;
+    for (int i = 0; i < N; i++) {
+        string EXT; // file extension
+        string MT; // MIME type.
+        cin >> EXT >> MT; cin.ignore();
+        for(int j = 0; j < EXT.length(); j++) EXT[j] = toupper(EXT[j]);
+        cerr << "대문자? : " << EXT[0]<< endl;
+        //맵은 1:1매칭이니깐 ext를 알아서 만들어서 거기의 세컨드로 mt를 넣어줌
+        extension[EXT] =MT;
+    }
+    for (int i = 0; i < Q; i++) {
+        string FNAME; // One file name per line.
+        getline(cin, FNAME);
+        if(FNAME.find('.') != string::npos)
+        {       //find_last_of//가장 마지막위치를 찾음 +1은 내가 .은 필요없으니깐
+            string extname = FNAME.substr( static_cast<int> (FNAME.find_last_of('.') ) + 1 );//split이 없으니깐 FNAME의 확장자만 따는걸로함 
+            
+          //위에서 for로 했으니 여기선 이거로 해봄
+            transform(extname.begin(), extname.end(), extname.begin(), ::toupper);
+            
+            auto it = extension.find(extname);
+            if( it != extension.end() )
+            {
+                cout << it->second << endl;
+            }
+            else
+                cout << "UNKNOWN"<<endl;
+        }
+        else
+            cout << "UNKNOWN"<<endl;
+    }
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+
+    // For each of the Q filenames, display on a line the corresponding MIME type. If there is no corresponding type, then display UNKNOWN.
+}

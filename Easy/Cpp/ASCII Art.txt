@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int L;
+    cin >> L; cin.ignore();
+    int H;
+    cin >> H; cin.ignore();
+    string T;
+
+    getline(cin, T);
+    //대문자로 변환 foreach와 비슷한 맥락의 아이인듯
+    transform(T.begin(), T.end(),T.begin(), ::toupper);
+    string ascii[H][27];
+    string board[H];
+
+
+    for (int i = 0; i < H; i++) {
+        string ROW;
+        getline(cin, ROW);
+        
+        for(int j = 0; j <27; j++)
+        {
+            ascii[i][j] = ROW.substr(j*L,L);
+                    cerr<< ascii[i][j] << " ";
+        }
+        cerr<<endl;
+        
+    }
+    for(int h = 0; h < H; h++)
+    {
+        for(int n =0; n < T.length(); n++)
+        {
+            //(int)대신 사용해봄
+            int cur = static_cast<int>(T[n]);
+            
+            if(cur -65 >= 0 && cur - 65 <= 26 )
+            board[h] += ascii[h][cur-65];
+            else
+            board[h] += ascii[h][26];
+        }
+    }
+    for(int i = 0; i < H; i++)
+        cout <<board[i]<< endl;
+
+}

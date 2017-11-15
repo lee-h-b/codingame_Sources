@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <bitset>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    string MESSAGE;
+    char before = '2';
+    
+    string result;
+    string chuck ="";
+    getline(cin, MESSAGE);
+
+    for(auto& ch : MESSAGE)
+    {
+        std::bitset<7> bit;
+        cerr << ch << endl;
+        bit = ch;
+
+        chuck += bit.to_string<char,string::traits_type, string::allocator_type>();
+    }
+            cerr << chuck<<endl;
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+    for(auto& c : chuck)
+    {
+        if(before != c)
+        {
+            if(c == '1')
+            result += " 0 ";
+            else if( c == '0')
+            result += " 00 ";
+            before = c;
+        }
+            result+= "0";
+
+    }
+    result.erase(0,1);
+    cout << result << endl;
+}

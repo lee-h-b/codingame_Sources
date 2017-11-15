@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    string LON;
+    cin >> LON; cin.ignore();
+    string LAT;
+    cin >> LAT; cin.ignore();
+    int N =1;
+    cin >> N; cin.ignore();
+    size_t repchar = LON.find(",");
+    LON = LON.replace(repchar,1,".");
+    repchar = LAT.find(",");
+    LAT = LAT.replace(repchar,1,".");
+    
+    double curLON = stof(LON);
+    double curLAT = stof(LAT);
+//    cerr << curLON <<endl;
+    string place;//목표 건물 명
+    double distance = 999999999;
+//    LON = LON.replace(LON.begin(),",",".");
+//    float lof = stof(LON.replace(",",".") );
+    for (int i = 0; i < N; i++) {
+        string DEFIB;
+        getline(cin, DEFIB);
+        //split이 없으니깐 내가 직접 작업해야하고
+        //우선 ;구분으로 string3개를 얻고 ","를 다시 "."로 바꾸기
+        string curTown;
+        //감산할때 -몇으로 해야할까도 문제네
+        //맨처음 ; +1 에서부터  위치에서 시작해서 그위치 +1에서부터의 ;까지의 범위 에서 다시 맨처음 ; 위치만큼을 뺀다 
+        //이러면 1번째이후와 2번째 이전 사이의 값이 나옴
+        curTown.assign(DEFIB,static_cast<int>(DEFIB.find(";" ) ) +1 ,
+        static_cast<int>( DEFIB.find(";",DEFIB.find(";") +1 ) ) -static_cast<int>(DEFIB.find(";" ) +1) );
+        
+//        cerr << curTown <<endl;
+        double DEFLON = 1;
+        double DEFLAT = 1;
+        string temp = "";
+        
+        temp = DEFIB.substr(DEFIB.rfind(";") +1 );
+        temp = temp.replace(temp.find(","),1,".");
+        cerr<<temp <<endl;
+        DEFLAT = stof(temp);
+        
+        //위의 반대로 맨뒤의 첫번째 ;의 바로 앞에서부터 뒤로 검색해서 나온 ; +1(+1은 세미콜론 제거용)에서부터 (맨뒤의 ;자리 - 맨뒤에서 2번째 ;자리)까지 범위를 가져옴
+        temp = DEFIB.substr(DEFIB.rfind(";", DEFIB.rfind(";")-1 ) +1 , 
+        DEFIB.rfind(";" ) - DEFIB.rfind(";", DEFIB.rfind(";")-1  ) );
+//        cerr << temp << "rfind 1. " << DEFIB.rfind(";", DEFIB.rfind(";")-1 ) << " 0 " << DEFIB.rfind(";") << endl;
+        temp = temp.replace(temp.find(","),1,".");
+        DEFLON = stof(temp);
+        cerr << curLON << " " << DEFLON <<endl;
+        double dist = pow(DEFLON - curLON,2) + pow(DEFLAT - curLAT ,2);
+//        double dist = sqrt((DEFLON-curLON)^2+(DEFLAT-curLAT)^2)
+        if(dist <= distance)
+        {
+            distance =dist;
+            place = curTown;
+        }
+        //pow(2,0.5)
+//        DEFLON = DEFIB.rfrind(";");
+    }
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+    if( N != 0)
+    cout << place << endl;
+    
+}
