@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int n;
+    vector<int> list;
+    int max = 0;
+    int cur =0;
+    int min = 0;
+    cin >> n; cin.ignore();
+    for (int i = 0; i < n; i++) {
+        int v;
+        cin >> v; cin.ignore();
+            list.push_back(v);        
+        if( max < v)
+        {
+            max = v;
+            cur = i;
+        }
+        else if(v - max < min)
+        {
+            min = v-max;
+        }
+    }
+    
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+    cout << min << endl;
+}

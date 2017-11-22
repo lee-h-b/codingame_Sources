@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+ int char_to_int(char c)
+{
+   switch(c)
+   {
+       case 'A' : return 14; 
+       case 'K' : return 13; 
+       case 'Q' : return 12; 
+       case 'J' : return 11;      
+   }
+}
+void addQueue(queue<int> &winner, queue<int>& field1, queue<int>& field2)
+{
+    for(int i =0; field1.size(); i++)
+    {
+        winner.push(field1.front() );
+        field1.pop();
+    }
+    for(int i =0; field2.size(); i++)
+    {
+        winner.push(field2.front() );
+        field2.pop();
+    }
+}
+int main()
+{
+    queue<int> player1,player2;
+    queue<int>p1temp, p2temp;
+    
+    int p1Card;
+    int p2Card;
+    int Round = 0;
+    int n; // the number of cards for player 1
+    cin >> n; cin.ignore();
+    for (int i = 0; i < n; i++) {
+        string cardp1; // the n cards of player 1
+        cin >> cardp1; cin.ignore();
+        if(cardp1[0] > 64)
+           player1.push( char_to_int( cardp1[0]) );
+        else
+            player1.push ( stoi(cardp1,0) );
+    }
+    int m; // the number of cards for player 2
+    cin >> m; cin.ignore();
+    for (int i = 0; i < m; i++) {
+        string cardp2; // the m cards of player 2
+        cin >> cardp2; cin.ignore();
+        if(cardp2[0] > 64)
+            player2.push(char_to_int(cardp2[0]) );
+        else
+            player2.push(stoi ( cardp2, 0) );            
+    }
+    
+    //gameloop
+    while(true)
+    {
+        if(player1.size() == 0 || player2.size() == 0)
+        {
+            if(player1.size() == 0)
+                cout << "2 " << Round << endl;
+            else
+                cout << "1 " << Round << endl;
+            break;
+        }
+        p1Card = player1.front();
+        player1.pop();
+        p2Card = player2. front();
+        player2.pop();
+        p1temp.push(p1Card);
+        p2temp.push(p2Card);
+        
+        if(p1Card > p2Card)
+        {
+            addQueue(player1, p1temp,p2temp);
+        }
+        else if(p2Card > p1Card)
+        {
+            addQueue(player2, p1temp, p2temp);
+        }
+        else 
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                cerr << p1Card<< " vs " << p2Card<<endl;
+                p1temp.push( player1.front() );
+                player1.pop();
+                p2temp.push( player2. front() );
+                player2.pop();
+                if(player1.size() == 0 || player2.size() == 0)
+                {
+                    cout << "PAT" << endl;
+                    return 0;
+                }
+            }
+            continue;
+        }
+        Round ++;
+    }
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+}

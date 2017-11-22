@@ -1,0 +1,126 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+ void Hash(int posval,int &x, int &y,string POS)
+ {
+     cerr<< posval <<"value" << endl;
+     switch(posval)
+     {
+         case 1: 
+         case 3:
+         case 7:
+         case 8:
+         case 9:
+         y+=1; break;
+         case 2:
+         case 6:
+         {
+             if(POS == "LEFT")
+                x+=1;
+            else x-=1;
+            break;
+         }
+         
+         case 4:
+         {
+             if(POS == "LEFT")
+                 break;
+            if(POS =="TOP")
+                x -= 1;
+            else y +=1;
+            break;
+         }
+         case 5:
+         {
+             if(POS == "RIGHT")break;
+             if(POS =="TOP")     x +=1;
+             else   y +=1;
+             break;
+         }
+        case 10:
+        {
+            if(POS == "TOP")    x -=1;
+            break;
+        }
+        case 11:
+        {
+            if(POS == "TOP") x +=1;
+            break;
+        }
+        case 12:
+        {
+            if(POS =="RIGHT") y+= 1;
+            break;
+        }
+        case 13:
+        {
+            if(POS =="LEFT")    y +=1;
+            break;
+        }
+     }
+ }
+int main()
+{
+    int W; // number of columns.
+    int H; // number of rows.
+    cin >> W >> H; cin.ignore();
+    /*
+        for (int i = 0; i < H; i++) {
+       for (int j=0; j<W;j++){
+           cin>>a[i][j];
+           LINE대신 cin으로 해결하더라..
+    */
+    int array[H][W];
+    for (int i = 0; i < H; i++) {
+        string LINE; // represents a line in the grid and contains W integers. Each integer represents one room of a given type.
+        getline(cin, LINE);
+        int x = 0;
+        vector<string> split;
+        while(LINE.length() !=0 )
+        {
+            int pos = LINE.find(' ');
+            if(pos != -1)
+            {
+                split.push_back( LINE.substr(0,pos) );
+                LINE.erase(0, pos+1);
+            }
+            else
+            {
+                split.push_back(LINE);
+                LINE.clear();
+            }
+        }
+        for(int j = 0; j < split.size(); j++)
+        {
+            array[i][j] = stoi(split[j]);
+        }
+    }
+    int EX; // the coordinate along the X axis of the exit (not useful for this first mission, but must be read).
+    cin >> EX; cin.ignore();
+
+    // game loop
+    while (1) {
+        int XI;
+        int YI;
+        string POS;
+        cin >> XI >> YI >> POS; cin.ignore();
+        cerr << XI <<" " <<YI << " " << POS << endl;
+        Hash(array[YI][XI], XI,YI,POS);
+        cerr << "after "<< XI <<" " <<YI << " " << POS << endl;
+        // Write an action using cout. DON'T FORGET THE "<< endl"
+        // To debug: cerr << "Debug messages..." << endl;
+
+
+        // One line containing the X Y coordinates of the room in which you believe Indy will be on the next turn.
+        cout << XI <<" " << YI << endl;
+    }
+}

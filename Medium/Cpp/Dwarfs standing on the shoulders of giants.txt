@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+ //º¹½À¿ë 
+ template <typename T>
+ void DepthFinder(pair<T,T> pipe[],T size,T targetValue,T &max,int count =2)
+ {
+     for(int i = 0; i <size; i++)
+     {
+         if(pipe[i].first == targetValue)
+         {
+             DepthFinder(pipe, size, pipe[i].second, max, count+1);
+         }
+     }
+     if(max < count)
+     max = count;
+ }
+int main()
+{
+    int n; // the number of relationships of influence
+    cin >> n; cin.ignore();
+    pair<int, int> pipe[n];
+    int Long =1;
+    
+    for (int i = 0; i < n; i++) {
+        int x; // a relationship of influence between two people (x influences y)
+        int y;
+        cin >> x >> y; cin.ignore();
+        pipe[i] = {x, y};
+    }
+    
+    for (int i = 0; i < n; i++)
+    {
+        DepthFinder(pipe,n, pipe[i].second, Long);
+    }
+    
+    cout << Long;
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+}

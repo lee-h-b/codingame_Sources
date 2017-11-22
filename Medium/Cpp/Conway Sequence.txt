@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <list>
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int R;
+    cin >> R; cin.ignore();
+    int L;
+    cin >> L; cin.ignore();
+    list<int> lines[2];//한번 메모리의 절약을 위해서
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl
+    list<int> answer;
+    lines[0].push_back(R);
+    for(int i = 1; i < L; i++)
+    {
+        auto temp = lines[i%2 ==0? 1: 0];
+        auto temp2 = lines[i%2 == 0? 0: 1];
+        int count = 0;
+        
+//        cerr << (i%2 == 0? 1 : 0) << endl;
+        int cur = temp.front();
+//        temp.pop_front();
+        while( !temp.empty()  )
+        {         
+            if(cur == temp.front() )
+            {
+                count++;
+            }
+            else
+            {
+                temp2.push_back(count);
+                temp2.push_back(cur);
+                cur = temp.front();
+                count =1;
+            }
+            temp.pop_front();
+        }
+        
+        temp2.push_back(count);
+        temp2.push_back(cur);
+        lines[i%2 ==0? 0 : 1] =temp2;
+        lines[i%2 ==0? 1 : 0].clear();
+    }
+    
+    while( !lines[L%2 == 0? 1 : 0].empty() )
+    {
+        cout << lines[L%2 == 0? 1 : 0].front();
+        lines[L%2 == 0? 1 : 0].pop_front();
+        if(lines[L%2 == 0? 1 : 0].empty() == false)
+        cout << " ";
+        else
+        cout << endl;
+    }
+    
+}

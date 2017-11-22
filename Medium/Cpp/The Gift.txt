@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int N;
+    cin >> N; cin.ignore();
+    int C;
+    cin >> C; cin.ignore();
+    
+    vector<int> money;
+    int pay =0;
+    int dutch;
+    
+    for (int i = 0; i < N; i++) {
+        int B;
+        cin >> B; cin.ignore();
+        money.push_back(B);
+        pay+= money[i];
+    }
+    cerr << pay << " " << C << endl;
+    
+    if( pay < C) cout << "IMPOSSIBLE" << endl;
+    
+    else
+    {
+        sort(money.begin(), money.end() );
+        
+        for(auto it = money.begin(); it != money.end(); ++it)
+        {
+            dutch = C/N;
+            if(dutch > *it)
+            {
+                C -= *it;
+                cout << *it << endl;
+            }
+            else
+            {
+                C-= dutch;
+                cout << dutch << endl;
+            }
+            N -=1;
+        }
+    }
+
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+}

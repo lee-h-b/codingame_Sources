@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int N;
+    
+    int far = 0;
+    int near = INT_MAX;
+    
+    int median;
+    
+    long int result;
+    
+    vector<int>ypos;
+    cin >> N; cin.ignore();
+    for (int i = 0; i < N; i++) {
+        int X;
+        int Y;
+        cin >> X >> Y; cin.ignore();
+        ypos.push_back(Y);
+        if(far < X)
+        far = X;
+        
+        if(near > X)
+        near = X;
+    }
+    result = far - near;
+    
+    sort(ypos.begin(), ypos.end() );
+    if(N%2 == 1)
+    median = ypos[ypos.size() /2];
+    else
+    median = (ypos[ypos.size() /2 ] + ypos[ypos.size()/2 -1]) /2;
+    cerr << median << endl;
+
+    
+    for(int i = 0; i <N; i++)
+    {
+        int distance = abs(ypos[i] - median);
+        result += distance;
+    }
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+    cout << result << endl;
+}

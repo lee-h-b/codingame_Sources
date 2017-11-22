@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int surfaceN; // the number of points used to draw the surface of Mars.
+    pair<int, int> groundX;
+    int groundY =21;
+    cin >> surfaceN; cin.ignore();
+    
+    bool find = false;
+    for (int i = 0; i < surfaceN; i++) {
+        int landX; // X coordinate of a surface point. (0 to 6999)
+        int landY; // Y coordinate of a surface point. By linking all the points together in a sequential fashion, you form the surface of Mars.
+        cin >> landX >> landY; cin.ignore();
+        if(find == true && landY != groundY)
+        continue;
+        if(landY != groundY)
+        {
+            groundX.first = landX;
+            groundY = landY;
+        }
+        else if(landY == groundY)
+        {
+            groundX.second = landX;
+            find =true;
+        }
+        
+    }
+    cerr << groundY << endl;
+    cerr << groundX.first << " " << groundX.second << endl;
+
+    // game loop
+    int angle;
+    int speed;
+    while (1) {
+        int X;
+        int Y;
+        int hSpeed; // the horizontal speed (in m/s), can be negative.
+        int vSpeed; // the vertical speed (in m/s), can be negative.
+        int fuel; // the quantity of remaining fuel in liters.
+        int rotate; // the rotation angle in degrees (-90 to 90).
+        int power; // the thrust power (0 to 4).
+        cin >> X >> Y >> hSpeed >> vSpeed >> fuel >> rotate >> power; cin.ignore();
+
+        if(X <= groundX.first)
+        {
+            rotate = max(-60, (X- (groundX.first + groundX.second) /2) /50 + hSpeed);
+        }
+        else if( X >= groundX.second)
+        {
+            rotate = min(60, (X - (groundX.first + groundX.second) /2) /50 + hSpeed);
+        }
+        else if(rotate != 0)
+        rotate = max(min(30, +hSpeed *2), -30);
+        if(vSpeed <- 30 || abs(rotate) > 1 || (groundY >1500 && (groundX.first > X || groundX.second < X) ) )
+            speed = 4;
+        else
+        speed = 0;
+        cout << rotate << " " << speed << endl;
+        // Write an action using cout. DON'T FORGET THE "<< endl"
+        // To debug: cerr << "Debug messages..." << endl;
+
+    }
+}

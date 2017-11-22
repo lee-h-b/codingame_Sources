@@ -1,0 +1,108 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int L;
+    int H;
+    cin >> L >> H; cin.ignore();
+    vector<string> maya;
+    long long num1 = 0;
+    long long num2 = 0;
+    long long result = 0;
+    
+    int power = 1;
+    int cur = 0;
+    
+    for(int i= 0; i< 20; i++) maya.push_back("");
+    for (int i = 0; i < H; i++) {
+        string numeral;
+        cin >> numeral; cin.ignore();
+        
+        for(int j = 0; j < 20; j++)
+        {
+           maya[j] += numeral.substr(j*L,L);
+            cerr << maya[j] <<" ";
+        }
+        cerr <<endl;
+    }
+    
+    int S1;
+    cin >> S1; cin.ignore();
+    string mN1[S1];
+    power =  pow(20.0, (S1/ L -1) );
+    
+    for (int i = 0; i < S1; i++) {
+        string num1Line;
+        cin >> num1Line; cin.ignore();
+        mN1[cur] += num1Line;
+        int j = 0;
+        if( (i +1 ) % L == 0 && i +1 >=L)
+        {
+            for(j = 0; j <20; j++)
+            {
+                if(maya[j] == mN1[cur]) break;
+            }
+            num1 += power * j;
+            cur++;
+            power /=20;
+        }
+    }
+    int S2;
+    cin >> S2; cin.ignore();
+    string mN2[S2];
+    cur = 0;
+    power = pow(20.0, (S2/ L -1) );
+    for (int i = 0; i < S2; i++) {
+        string num2Line;
+        cin >> num2Line; cin.ignore();
+        mN2[cur] += num2Line;
+        int j = 0;
+        if( (i +1 ) % L == 0 && i +1 >=L)
+        {
+            for(j = 0; j <20; j++)
+            {
+                if(maya[j] == mN2[cur]) break;
+            }
+            num2 += power * j;
+            cur++;
+            power /=20;
+        }
+    }
+    string operation;
+    cin >> operation; cin.ignore();
+    
+    switch(operation[0])
+    {
+        case '+' : result = num1 + num2; break;
+        case '/' : result = num1 / num2; break;
+        case '*' : result = num1 * num2; break;
+        case '-' : result = num1 - num2; break;            
+    }
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+    vector<long long> draw;
+    while( result != 0)
+    {
+        draw.push_back(result %20);
+        result /= 20;
+    }
+    if(draw.size() == 0 )
+        for(int i =0; i < H; i++)
+        {
+            cout<<maya[0].substr(i *L, L) <<endl;    
+        }
+    for(int i = draw.size() -1; i >= 0; i--)
+    {
+        for(int j = 0; j <H; j++)
+        cout << maya[draw[i]].substr(j*L, L) <<endl;
+    }
+}

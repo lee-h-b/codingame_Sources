@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int W; // width of the building.
+    int H; // height of the building.
+    cin >> W >> H; cin.ignore();
+    int N; // maximum number of turns before game over.
+    cin >> N; cin.ignore();
+    int X0;
+    int Y0;
+    cin >> X0 >> Y0; cin.ignore();
+    cerr << X0 << " " << Y0 << "mm123" << endl;
+    pair<int, int> max,min;
+    min = {0, 0};
+    max = {W-1, H-1};
+    
+    pair<int, int> mid = {X0, Y0};
+    // game loop
+    while (1) {
+        string bombDir; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+        cin >> bombDir; cin.ignore();
+
+        for(auto it = bombDir.begin(); it!= bombDir.end(); it++)
+        {
+            cerr << *it << endl;
+            if(*it == 'D')
+            {
+                min.second = mid.second +1;
+            }
+            if(*it == 'U')
+            {
+                max.second = mid.second -1;
+            }
+            if(*it == 'R')
+            {
+                min.first = mid.first +1;
+            }
+            if(*it =='L')
+            {
+                max.first = mid.first -1;
+            }
+        }
+        
+        mid.first = (max.first + min.first) /2;
+        mid.second = (max.second + min.second) /2;
+        
+        // Write an action using cout. DON'T FORGET THE "<< endl"
+        // To debug: cerr << "Debug messages..." << endl;
+
+
+        // the location of the next window Batman should jump to.
+        cout << mid.first<< " " <<mid.second<< endl;
+    }
+}

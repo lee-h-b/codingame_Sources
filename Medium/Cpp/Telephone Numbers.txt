@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+#include<set>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int N;
+    set<string> count;
+    cin >> N; cin.ignore();
+    for (int i = 0; i < N; i++) {
+        string telephone;
+        cin >> telephone; cin.ignore();
+        for(int j = telephone.size() ; j>0; j--)
+        {
+            count.insert(telephone.substr(0,j) );
+//            count
+        }
+    }
+    int num = 0;
+
+//    cerr << count.max_size()  << endl;
+
+    // Write an action using cout. DON'T FORGET THE "<< endl"
+    // To debug: cerr << "Debug messages..." << endl;
+
+
+    // The number of elements (referencing a number) stored in the structure.
+    cout << count.size()<< endl;
+}
